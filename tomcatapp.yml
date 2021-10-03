@@ -1,0 +1,56 @@
+---
+  - hosts: server
+    become: true
+    gather_facts: no
+    tasks: 
+      - name: Install base packages
+        raw: name={{ item }} state=installed
+        with_items:
+          - python3
+          - python3-pip
+          - pytest
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+
+      - name: creat build dir 
+        file: 
+          path: /root/tomcatapp-dockerfile
+          dtate: directory
+          owner: toor
+          group: root
+          mode: '0755'
+
+      - name: copy Dockerfile
+        copy: 
+          src: ./Dockerfile
+          dest: /root/tomcatapp-dockerfile
+          owner: toor
+          group: root
+          mode: '0644'
+
+      -name: build container image    
+        docker_image: 
+          name: tomcat_app:v1.0
+          build:
+            path: /root/tomcatapp-dockerfile
+            source: build
+          state: present
+
+     
+
+
+
+
+
+          - hosts: localhost
+  connection: local
+  tasks:
+    - name: deploy nginx docker container
+      docker_container:
+        image: nginx:stable
+        name: nginx
+        state: started
+        auto_remove: true
+        ports:
+          - "8080:80"
