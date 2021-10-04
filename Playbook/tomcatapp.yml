@@ -8,49 +8,32 @@
         with_items:
           - python3
           - python3-pip
-          - pytest
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
+          - docker-py
 
-      - name: creat build dir 
-        file: 
-          path: /root/tomcatapp-dockerfile
-          dtate: directory
-          owner: toor
-          group: root
-          mode: '0755'
-
-      - name: copy Dockerfile
-        copy: 
-          src: ./Dockerfile
-          dest: /root/tomcatapp-dockerfile
-          owner: toor
-          group: root
-          mode: '0644'
-
-      -name: build container image    
+      - name: Build Image
         docker_image: 
-          name: tomcat_app:v1.0
-          build:
-            path: /root/tomcatapp-dockerfile
-            source: build
-          state: present
+          path: ~/CP-Devops-Assignment/Dockerfile
+          name: webapp
 
+      - name: Run Container
+        docker_continer: 
+          name: webapp
+          image: webapp
+          state: started
+          ports:
+           - "8080:8080"
+          tty: true
+          detached: true
+          
+       - name: validate
+         uri: 
+           url: http://localhost:8080/sample
+           return_content: yes
+           register: this
+           faild_when: "''not in this content"
+           
      
 
 
 
 
-
-          - hosts: localhost
-  connection: local
-  tasks:
-    - name: deploy nginx docker container
-      docker_container:
-        image: nginx:stable
-        name: nginx
-        state: started
-        auto_remove: true
-        ports:
-          - "8080:80"
