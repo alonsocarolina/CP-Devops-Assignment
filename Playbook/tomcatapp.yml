@@ -16,7 +16,7 @@
           name: webapp
 
       - name: Run Container
-        docker_continer: 
+        docker_container: 
           name: tomecatapp
           image: webapp
           state: started
@@ -25,16 +25,9 @@
           tty: true
           detached: true
           
-       - name: validate
-         uri: 
-           url: http://localhost:8080/sample
-           return_content: yes
-           register: this
-           faild_when: "'Sample 'Hello World' Application'not in this.content"
-           
-           
-     
-
-
-
-
+      - name: validate
+        uri: 
+          url: http://localhost:8080/sample
+          return_content: yes
+          register: this
+          faild_when: "'Sample 'Hello World' Application'not in this.content"
