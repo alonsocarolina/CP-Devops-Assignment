@@ -1,4 +1,4 @@
-FROM tomcat:9.0.53
+FROM tomcat:9.0
 
 # add war file 
 COPY sample.war /usr/local/tomcat/webapps/ 

@@ -13,8 +13,9 @@
 
       - name: Build Image
         docker_image: 
-          path: ./CP-Devops-Assignment/Dockerfile
+          path: Dockerfile
           name: webapp
+          state: present
 
       - name: Run Container
         docker_container: 
